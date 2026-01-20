@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int bodyParts = 6;
     int applesEaten = 0;
     int appleX, appleY;
-    char direction = 'D';
+    char direction = 'd';
     boolean running = false;
     Timer timer;
     Random random;
@@ -77,17 +77,21 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         switch (direction) {
-            case 'W' -> {
+            case 'w' -> {
                 y[0] = y[0] - UNIT_SIZE;
+                break;
             }
-            case 'S' -> {
+            case 's' -> {
                 y[0] = y[0] + UNIT_SIZE;
+                break;
             }
-            case 'D' -> {
+            case 'd' -> {
                 x[0] = x[0] - UNIT_SIZE;
+                break;
             }
-            case 'A' -> {
+            case 'a' -> {
                 x[0] = x[0] + UNIT_SIZE;
+                break;
             }
         }
 
@@ -98,6 +102,34 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void checkCollision() {
+        //checks if Head collides with body
+        for (int i = bodyParts; i > 0; i--) {
+            if((x[0] == x[i]) && (y[0] == y[i])) {
+                running = false;
+                return;// Game Over method
+            }
+        }
+        //check if head touches the left border
+        if (x[0] < 0) {
+            running = false;
+        }
+        //check if head touches the right border
+        if (x[0] > SCREEN_WIDTH) {
+            running = false;
+        }
+        //check if head touches the top border
+        if (y[0] < 0) {
+            running = false;
+        }
+
+        //check if head touches the bottom border
+        if (y[0] > SCREEN_HEIGHT) {
+            running = false;
+        }
+
+        if (!running) {
+            timer.stop();
+        }
 
     }
 
@@ -105,8 +137,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
+
         if (running) {
             move();
             checkApple();
