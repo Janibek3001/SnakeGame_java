@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int bodyParts = 6;
     int applesEaten = 0;
     int appleX, appleY;
-    char direction = 'R';
+    char direction = 'D';
     boolean running = false;
     Timer timer;
     Random random;
@@ -52,6 +52,17 @@ public class GamePanel extends JPanel implements ActionListener {
         }
         g.setColor(Color.red);
         g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+        for (int i = 0; i < bodyParts; i++) {
+            if(i == 0) {
+                g.setColor(Color.green);
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            } else {
+                g.setColor(new Color(45,180,0));
+                g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+            }
+        }
+
     }
 
     public void newApple() {
@@ -60,6 +71,25 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void move() {
+        for (int i = bodyParts; i > 0; i--) {
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
+
+        switch (direction) {
+            case 'W' -> {
+                y[0] = y[0] - UNIT_SIZE;
+            }
+            case 'S' -> {
+                y[0] = y[0] + UNIT_SIZE;
+            }
+            case 'D' -> {
+                x[0] = x[0] - UNIT_SIZE;
+            }
+            case 'A' -> {
+                x[0] = x[0] + UNIT_SIZE;
+            }
+        }
 
     }
 
@@ -77,7 +107,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (running) {
+            move();
+            checkApple();
+            checkCollision();
+        }
+        repaint();
     }
 
     public class MyKeyAdapter extends KeyAdapter {
